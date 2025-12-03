@@ -1,0 +1,44 @@
+12/3/2025 1:44:30 PM - Script Execution Started
+12/3/2025 1:44:30 PM - Read the IP Address Range File and Executing the CIDR Ranges Function 
+12/3/2025 1:44:30 PM - Credential File Read. Location of Credential File is C:\Users\Soham Patil\OneDrive - TECHVITS SOLUTIONS PRIVATE LIMITED\powershell_script\credential.csv
+12/3/2025 1:44:30 PM - Total Rows in Credential File is 4
+12/3/2025 1:44:30 PM - IP Address File read
+12/3/2025 1:44:30 PM - Starting Ping Check Process for 192.168.1.146
+12/3/2025 1:44:31 PM - Ping Success: 192.168.1.146 
+12/3/2025 1:44:31 PM - Checking the Credentials. Calling CheckCredential Function for 192.168.1.146 
+12/3/2025 1:44:31 PM - Checking Various Credentials for Computer: 192.168.1.146 Row Count--4
+12/3/2025 1:44:31 PM - Secured Credentials
+12/3/2025 1:44:31 PM - Trying to Establish Connection using Username Windows
+12/3/2025 1:44:31 PM - Error Connecting to 192.168.1.146 Using UserName: Windows
+12/3/2025 1:44:31 PM - Secured Credentials
+12/3/2025 1:44:31 PM - Trying to Establish Connection using Username Administrator
+12/3/2025 1:44:31 PM - Connected to 192.168.1.146 Using UserName: Administrator
+12/3/2025 1:44:32 PM - Discovered Windows 7 OS. Running Scripts for Windows 7 using Credential Microsoft Windows 7 Professional  Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:44:54 PM - Execution of Scripts Completed for  Windows 7 OS.Credential Microsoft Windows 7 Professional  Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:44:54 PM - Starting Ping Check Process for 192.168.1.147
+12/3/2025 1:44:55 PM - Ping Success: 192.168.1.147 
+12/3/2025 1:44:55 PM - Checking the Credentials. Calling CheckCredential Function for 192.168.1.147 
+12/3/2025 1:44:55 PM - Checking Various Credentials for Computer: 192.168.1.147 Row Count--4
+12/3/2025 1:44:55 PM - Secured Credentials
+12/3/2025 1:44:55 PM - Trying to Establish Connection using Username Windows
+12/3/2025 1:44:55 PM - Error Connecting to 192.168.1.147 Using UserName: Windows
+12/3/2025 1:44:55 PM - Secured Credentials
+12/3/2025 1:44:55 PM - Trying to Establish Connection using Username Administrator
+12/3/2025 1:44:55 PM - Connected to 192.168.1.147 Using UserName: Administrator
+12/3/2025 1:44:55 PM - Discovered Windows 7 OS. Running Scripts for Windows 7 using Credential Microsoft Windows 7 Professional  Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:45:04 PM - Execution of Scripts Completed for  Windows 7 OS.Credential Microsoft Windows 7 Professional  Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:45:04 PM - Starting Ping Check Process for 192.168.1.163
+12/3/2025 1:45:04 PM - Ping Success: 192.168.1.163 
+12/3/2025 1:45:04 PM - Checking the Credentials. Calling CheckCredential Function for 192.168.1.163 
+12/3/2025 1:45:04 PM - Checking Various Credentials for Computer: 192.168.1.163 Row Count--4
+12/3/2025 1:45:04 PM - Secured Credentials
+12/3/2025 1:45:04 PM - Trying to Establish Connection using Username Windows
+12/3/2025 1:45:04 PM - Error Connecting to 192.168.1.163 Using UserName: Windows
+12/3/2025 1:45:04 PM - Secured Credentials
+12/3/2025 1:45:04 PM - Trying to Establish Connection using Username Administrator
+12/3/2025 1:45:05 PM - Connected to 192.168.1.163 Using UserName: Administrator
+12/3/2025 1:45:05 PM - Discovered Non Windows 7 OS. Running Scripts for Windows 7 using Credential Microsoft Windows 11 Pro Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:45:45 PM - Execution of Scripts Completed for  Non-Windows 7 OS.Credential Microsoft Windows 11 Pro Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 1:45:45 PM - Calling Creation of HW and SW File Process
+12/3/2025 1:45:45 PM - Calling Creation of Failed Ping List Process
+12/3/2025 1:45:45 PM - Execution Completed. 

@@ -1,0 +1,16 @@
+12/3/2025 1:50:33 PM - Script Execution Started
+12/3/2025 1:50:33 PM - Read the IP Address Range File and Executing the CIDR Ranges Function 
+12/3/2025 1:50:33 PM - Credential File Read. Location of Credential File is C:\Users\Soham Patil\OneDrive - TECHVITS SOLUTIONS PRIVATE LIMITED\powershell_script\credential.csv
+12/3/2025 1:50:33 PM - Total Rows in Credential File is 4
+12/3/2025 1:50:33 PM - IP Address File read
+12/3/2025 1:50:33 PM - Starting Ping Check Process for 192.168.1.146
+12/3/2025 1:50:33 PM - Ping Success: 192.168.1.146 
+12/3/2025 1:50:33 PM - Checking the Credentials. Calling CheckCredential Function for 192.168.1.146 
+12/3/2025 1:50:33 PM - Checking Various Credentials for Computer: 192.168.1.146 Row Count--4
+12/3/2025 1:50:33 PM - Secured Credentials
+12/3/2025 1:50:33 PM - Trying to Establish Connection using Username Windows
+12/3/2025 1:50:33 PM - Error Connecting to 192.168.1.146 Using UserName: Windows
+12/3/2025 1:50:33 PM - Secured Credentials
+12/3/2025 1:50:33 PM - Trying to Establish Connection using Username Administrator
+12/3/2025 1:50:34 PM - Connected to 192.168.1.146 Using UserName: Administrator
+12/3/2025 1:50:34 PM - Discovered Windows 7 OS. Running Scripts for Windows 7 using Credential Microsoft Windows 7 Professional  Connected Administrator System.Management.Automation.PSCredential[2]

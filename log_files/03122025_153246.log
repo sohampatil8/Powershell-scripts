@@ -1,0 +1,21 @@
+12/3/2025 3:32:46 PM - Script Execution Started
+12/3/2025 3:32:46 PM - Read the IP Address Range File and Executing the CIDR Ranges Function 
+12/3/2025 3:32:46 PM - Credential File Read. Location of Credential File is C:\Users\Soham Patil\OneDrive - TECHVITS SOLUTIONS PRIVATE LIMITED\Desktop\Git-PowershellScript\credential.csv
+12/3/2025 3:32:46 PM - Total Rows in Credential File is 1
+12/3/2025 3:32:46 PM - IP Address File read
+12/3/2025 3:32:46 PM - Starting Ping Check Process for 192.168.1.146
+12/3/2025 3:32:49 PM - Ping Failed for 192.168.1.146, Skipping the Scan. Entry created in Ping Failed List
+12/3/2025 3:32:49 PM - Starting Ping Check Process for 192.168.1.147
+12/3/2025 3:32:52 PM - Ping Failed for 192.168.1.147, Skipping the Scan. Entry created in Ping Failed List
+12/3/2025 3:32:52 PM - Starting Ping Check Process for 192.168.1.163
+12/3/2025 3:32:52 PM - Ping Success: 192.168.1.163 
+12/3/2025 3:32:52 PM - Checking the Credentials. Calling CheckCredential Function for 192.168.1.163 
+12/3/2025 3:32:52 PM - Checking Various Credentials for Computer: 192.168.1.163 Row Count--1
+12/3/2025 3:32:52 PM - Secured Credentials
+12/3/2025 3:32:52 PM - Trying to Establish Connection using Username Administrator
+12/3/2025 3:32:52 PM - Connected to 192.168.1.163 Using UserName: Administrator
+12/3/2025 3:32:52 PM - Discovered Non Windows 7 OS. Running Scripts for Windows 7 using Credential Microsoft Windows 11 Pro Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 3:33:35 PM - Execution of Scripts Completed for  Non-Windows 7 OS.Credential Microsoft Windows 11 Pro Connected Administrator System.Management.Automation.PSCredential[2]
+12/3/2025 3:33:35 PM - Calling Creation of HW and SW File Process
+12/3/2025 3:33:35 PM - Calling Creation of Failed Ping List Process
+12/3/2025 3:33:35 PM - Execution Completed. 
