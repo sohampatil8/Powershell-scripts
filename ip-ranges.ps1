@@ -1,5 +1,5 @@
-$InputFile = "C:\Users\Soham Patil\OneDrive - TECHVITS SOLUTIONS PRIVATE LIMITED\powershell_script\ip-range.txt"
-$OutputFile = "C:\Users\Soham Patil\OneDrive - TECHVITS SOLUTIONS PRIVATE LIMITED\powershell_script\file_ips.txt"
+$InputFile = $input_ip_file
+$OutputFile = $output_ip_file
 $AllIPs = New-Object System.Collections.Generic.List[string]
 
 # Convert IP address to integer
