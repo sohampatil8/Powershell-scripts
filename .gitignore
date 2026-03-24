@@ -1,0 +1,6 @@
+api_nodeJS\node_modules/
+api_nodeJS\dist/
+api_nodeJS\logs/
+api_nodeJS\.env
+api_nodeJS\*.log
+api_nodeJS\.DS_Store
