@@ -4,3 +4,5 @@ api_nodeJS\logs/
 api_nodeJS\.env
 api_nodeJS\*.log
 api_nodeJS\.DS_Store
+frontend_nodeJS/node_modules
+frontend_nodeJS/Powershell-scripts-main
