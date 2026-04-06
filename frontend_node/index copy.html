@@ -4,12 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Network Scanner</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="/socket.io/socket.io.js"></script>
     <style>
       :root {
         --bg: #0a0c0f;
@@ -22,8 +16,8 @@
         --warn: #ffb020;
         --text: #c8d4e0;
         --text-dim: #526070;
-        --mono: "Share Tech Mono", monospace;
-        --sans: "Barlow Condensed", sans-serif;
+        --mono: "Consolas", "Cascadia Code", "Fira Mono", "Courier New", monospace;
+        --sans: "Segoe UI", "Inter", "Arial Narrow", Arial, sans-serif;
       }
 
       * {
@@ -1056,7 +1050,6 @@
 
     <script>
       // ── State ──
-      let socket = io();
       let currentMode = "scan"; // 'scan' | 'device' | 'config'
       let scanResults = null;
       let deviceResults = null;
@@ -1152,11 +1145,6 @@
         loadSavedCredSets();
       }
 
-      // ── Socket ID handshake ──
-      socket.on("connect", () =>
-        log("scan-log", `Connected [${socket.id}]`, "info"),
-      );
-
       // ── Tabs ──
       function switchTab(tab) {
         currentMode = tab;
@@ -1197,38 +1185,42 @@
 
         log("scan-log", `Parsing input: ${input.replace(/\n/g, " ")}`, "info");
 
-        // Live progress
-        socket.off("scan:progress");
-        socket.on(
-          "scan:progress",
-          ({ scanned, total, percent, latestBatch }) => {
-            setProgress("scan", percent, `Scanned ${scanned} / ${total} hosts`);
-            latestBatch.forEach((r) => {
-              log(
-                "scan-log",
-                `${r.ip} → ${r.alive ? `ALIVE (${r.time}ms)` : "DEAD"}`,
-                r.alive ? "ok" : "err",
-              );
-            });
-          },
-        );
-
         try {
-          const res = await fetch("/api/scan", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ input, socketId: socket.id }),
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
-          scanResults = data;
+          // Parse input into individual IPs/targets
+          const targets = input.split(/[\s,]+/).map(t => t.trim()).filter(Boolean);
+          const pingResults = [];
+
+          for (let i = 0; i < targets.length; i++) {
+            const target = targets[i];
+            setProgress("scan", Math.round(((i + 1) / targets.length) * 100), `Pinging ${i + 1} / ${targets.length} hosts`);
+            try {
+              const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/ping", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ target }),
+              });
+              const json = await res.json();
+              if (json.success && json.data) {
+                const alive = json.data.alive;
+                const latencyMs = json.data.latencyMs ?? null;
+                pingResults.push({ ip: target, alive, time: latencyMs });
+                log("scan-log", `${target} → ${alive ? `ALIVE (${latencyMs}ms)` : "DEAD"}`, alive ? "ok" : "err");
+              } else {
+                pingResults.push({ ip: target, alive: false, time: null });
+                log("scan-log", `${target} → DEAD (error)`, "err");
+              }
+            } catch (e) {
+              pingResults.push({ ip: target, alive: false, time: null });
+              log("scan-log", `${target} → ERROR: ${e.message}`, "err");
+            }
+          }
+
+          const successIps = pingResults.filter(r => r.alive).map(r => r.ip);
+          const failedIps = pingResults.filter(r => !r.alive).map(r => r.ip);
+          scanResults = { total: pingResults.length, success: successIps, failed: failedIps, details: pingResults };
           showProgress("scan", false);
-          renderScanResults(data);
-          log(
-            "scan-log",
-            `Done. ${data.success.length} alive, ${data.failed.length} failed.`,
-            "ok",
-          );
+          renderScanResults(scanResults);
+          log("scan-log", `Done. ${successIps.length} alive, ${failedIps.length} failed.`, "ok");
         } catch (err) {
           log("scan-log", `Error: ${err.message}`, "err");
           showProgress("scan", false);
@@ -1292,21 +1284,18 @@
         const windowsMethod = document.getElementById("windows-method").value;
 
         try {
-          const res = await fetch("/api/device-info/single", {
+          const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/test-connection", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              ip,
-              username: user,
-              password: pass,
-              port: 22,
-              osType: osType,
+              target: ip,
               method: windowsMethod,
+              credentials: { username: user, password: pass },
             }),
           });
           const data = await res.json();
 
-          if (res.ok && data.status === "success") {
+          if (res.ok && data.success && data.data?.success) {
             btn.textContent = "✓ OK";
             btn.classList.remove("testing");
             btn.classList.add("success");
@@ -1332,7 +1321,7 @@
         setTimeout(() => {
           btn.textContent = "TEST";
           btn.classList.remove("testing", "success", "failed");
-        }, 3000);
+        }, 5000);
       }
 
       function removeCredRow(id) {
@@ -1414,32 +1403,106 @@
           "info",
         );
 
-        socket.off("device:progress");
-        socket.on("device:progress", ({ done, total, latest }) => {
-          const pct = Math.round((done / total) * 100);
-          setProgress("dev", pct, `Processed ${done} / ${total} hosts`);
-          latest.forEach((r) => {
-            log(
-              "dev-log",
-              `${r.ip} → ${r.status.toUpperCase()}${r.error ? ": " + r.error : ""}`,
-              r.status === "success" ? "ok" : "err",
-            );
-          });
-        });
-
         try {
-          const res = await fetch("/api/device-info", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hosts, socketId: socket.id }),
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
-          deviceResults = data.results;
+          const allResults = [];
+
+          for (let i = 0; i < hosts.length; i++) {
+            const host = hosts[i];
+            setProgress("dev", Math.round(((i + 1) / hosts.length) * 100), `Processed ${i + 1} / ${hosts.length} hosts`);
+            try {
+              const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/scan", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  target: host.ip,
+                  method: host.method,
+                  credentials: { username: host.username, password: host.password },
+                  continueOnError: false,
+                }),
+              });
+              const json = await res.json();
+
+              if (json.success && json.data) {
+                const d = json.data;
+                const hw = d.hardware || {};
+                const sw = d.software || [];
+
+                // Map new response format to the parsed object the UI expects
+                const parsed = {
+                  hostname: hw.Hostname,
+                  domain: hw.Domain,
+                  os: hw.OperatingSystem || hw.OsName,
+                  os_manufacturer: hw.OsManufacturer,
+                  architecture: hw.OsArchitecture,
+                  build_number: hw.BuildNumber,
+                  install_date: hw.OsInstallDate,
+                  last_boot: hw.LastBootUpTime,
+                  registered_user: hw.RegisteredUser,
+                  windows_directory: hw.WindowsDirectory,
+                  boot_device: hw.BootDevice,
+                  manufacturer: hw.Manufacturer,
+                  model: hw.Model,
+                  system_family: hw.SystemFamily,
+                  system_sku: hw.SystemSKUNumber,
+                  system_type: hw.SystemType,
+                  serial_number: hw.SerialNumber,
+                  hypervisor_present: hw.HypervisorPresent,
+                  part_of_domain: hw.PartOfDomain,
+                  cpu: hw.Cpu,
+                  cpu_max_speed: hw.MaxClockSpeedMHz ? hw.MaxClockSpeedMHz + " MHz" : null,
+                  cpu_current_speed: hw.CurrentClockSpeedMHz ? hw.CurrentClockSpeedMHz + " MHz" : null,
+                  cpu_sockets: hw.TotalSockets,
+                  cpu_cores: hw.TotalCores,
+                  cores_per_socket: hw.CoresPerSocket,
+                  number_of_logical_processors: hw.NumberOfLogicalProcessors,
+                  number_of_processors: hw.NumberOfProcessors,
+                  memory: { total: hw.TotalPhysicalMemoryGB ? hw.TotalPhysicalMemoryGB + " GB" : null },
+                  primary_username: hw.PrimaryUserName,
+                  disks: (hw.Disks || []).map(disk => ({ info: JSON.stringify(disk) })),
+                  number_of_drives: hw.NumberOfDrives,
+                  drives: hw.Drives,
+                  size_of_drives: hw.SizeOfDrives,
+                  graphics_card: hw.GraphicsCard,
+                  network_adapters: (hw.NetworkAdapters || []).map(a => a.name).join(", "),
+                  ip_addresses: (hw.NetworkAdapters || []).flatMap(a => a.ipAddresses || []),
+                  mac_addresses: (hw.NetworkAdapters || []).map(a => a.macAddress).filter(Boolean),
+                  license_name: hw.LicenseName,
+                  license_description: hw.LicenseDescription,
+                  license_key: hw.LicenseProductKey,
+                  w32_csp_name: hw.CspName,
+                  w32_csp_vendor: hw.CspVendor,
+                  w32_csp_version: hw.CspVersion,
+                  installed_software: sw.map(app => ({
+                    Name: app.ApplicationName,
+                    Version: app.Version,
+                    Publisher: app.Publisher,
+                  })),
+                };
+
+                allResults.push({
+                  ip: host.ip,
+                  status: "success",
+                  parsed,
+                  raw: JSON.stringify(d),
+                  timestamp: json.meta?.timestamp || new Date().toISOString(),
+                });
+                log("dev-log", `${host.ip} → SUCCESS`, "ok");
+              } else {
+                const errMsg = json.message || "Scan failed";
+                allResults.push({ ip: host.ip, status: "failed", error: errMsg, timestamp: new Date().toISOString() });
+                log("dev-log", `${host.ip} → FAILED: ${errMsg}`, "err");
+              }
+            } catch (e) {
+              allResults.push({ ip: host.ip, status: "failed", error: e.message, timestamp: new Date().toISOString() });
+              log("dev-log", `${host.ip} → ERROR: ${e.message}`, "err");
+            }
+          }
+
+          deviceResults = allResults;
           showProgress("dev", false);
-          renderDeviceResults(data.results);
-          const ok = data.results.filter((r) => r.status === "success").length;
-          const bad = data.results.filter((r) => r.status !== "success").length;
+          renderDeviceResults(allResults);
+          const ok = allResults.filter((r) => r.status === "success").length;
+          const bad = allResults.filter((r) => r.status !== "success").length;
           log("dev-log", `Done. ${ok} success, ${bad} failed.`, "ok");
         } catch (err) {
           log("dev-log", `Error: ${err.message}`, "err");

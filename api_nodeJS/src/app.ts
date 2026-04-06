@@ -15,13 +15,19 @@ export function createApp(): Express {
   app.use(helmet());
 
   // ── CORS ────────────────────────────────────────────────────────────────
+  // app.use(cors({
+  //   origin: appConfig.corsOrigins.length > 0
+  //     ? appConfig.corsOrigins
+  //     : (appConfig.env === 'development' ? true : false),
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  //   allowedHeaders: ['Content-Type', 'Authorization'],
+  //   credentials: true,
+  // }));
+
   app.use(cors({
-    origin: appConfig.corsOrigins.length > 0
-      ? appConfig.corsOrigins
-      : (appConfig.env === 'development' ? true : false),
-    methods:            ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders:     ['Content-Type', 'Authorization'],
-    credentials:        true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   }));
 
   // ── Body parsing ────────────────────────────────────────────────────────
@@ -30,10 +36,10 @@ export function createApp(): Express {
 
   // ── Rate limiting ───────────────────────────────────────────────────────
   app.use(rateLimit({
-    windowMs:    appConfig.rateLimit.windowMs,
-    max:         appConfig.rateLimit.max,
+    windowMs: appConfig.rateLimit.windowMs,
+    max: appConfig.rateLimit.max,
     standardHeaders: true,
-    legacyHeaders:   false,
+    legacyHeaders: false,
     message: { success: false, message: 'Too many requests, please try again later.' },
   }));
 
