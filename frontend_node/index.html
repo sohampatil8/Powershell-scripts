@@ -1195,7 +1195,7 @@
             const target = targets[i];
             setProgress("scan", Math.round(((i + 1) / targets.length) * 100), `Pinging ${i + 1} / ${targets.length} hosts`);
             try {
-              const res = await fetch("http://192.168.1.162:3000/api/v1/scanner/ping", {
+              const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/ping", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ target }),
@@ -1285,7 +1285,7 @@
         const windowsMethod = document.getElementById("windows-method").value;
 
         try {
-          const res = await fetch("http://192.168.1.162:3000/api/v1/scanner/test-connection", {
+          const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/test-connection", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1432,7 +1432,7 @@
             const host = hosts[i];
             setProgress("dev", Math.round(((i + 1) / hosts.length) * 100), `Processed ${i + 1} / ${hosts.length} hosts`);
             try {
-              const res = await fetch("http://192.168.1.162:3000/api/v1/scanner/scan", {
+              const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/scan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -1536,7 +1536,7 @@
 
       async function callSSH(host) {
         try {
-          const res = await fetch("http://192.168.1.162:3000/api/v1/scanner/ssh", {
+          const res = await fetch("http://192.168.1.162:5000/api/v1/scanner/ssh", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
