@@ -1,8 +1,9 @@
-api_nodeJS\node_modules/
-api_nodeJS\dist/
-api_nodeJS\logs/
-api_nodeJS\.env
-api_nodeJS\*.log
-api_nodeJS\.DS_Store
-frontend_nodeJS/node_modules
-frontend_nodeJS/Powershell-scripts-main
+/.gitignore
+api_nodeJS/node_modules/
+api_nodeJS/dist/
+api_nodeJS/logs/
+api_nodeJS/.env
+api_nodeJS/*.log
+api_nodeJS/.DS_Store
+frontend_node/node_modules
+frontend_node/Powershell-scripts-main
